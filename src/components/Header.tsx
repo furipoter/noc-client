@@ -8,9 +8,9 @@ const Header = () => {
     }
     return (
         <div className="flex w-full justify-between p-6 gradient">
-            <div className="text-red font-bold text-3xl break-keep">[LIVE] FURIOSA AI 해커톤 현장</div>
+            <div className="text-red font-bold text-2xl break-keep">[LIVE] FURIOSA AI 해커톤 현장</div>
             <button onClick={onClick}>
-                <MdOutlineExitToApp size="36" />
+                <MdOutlineExitToApp size="24" />
             </button>
         </div>
     )

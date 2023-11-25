@@ -1,6 +1,7 @@
 import {useRef, useEffect, useState} from "react";
 import Header from "../components/Header.tsx";
 import { FaRecordVinyl, FaCircleStop } from "react-icons/fa6";
+import people from '../assets/people.mp4'
 
 const CONSTRAINTS = {
     video: true,
@@ -21,11 +22,11 @@ const LivePage = () => {
             return;
         }
         console.log('uploadVideo', blob);
-        const mp4 = new Blob([blob], { type: 'video/mp4' });
+        // const mp4 = new Blob([people], { type: 'video/mp4' });
         try {
             const formData = new FormData();
-            formData.append('file_name', String(sequence));  // 원하는 파일 이름으로 설정
-            formData.append('video', mp4);
+            formData.append('file_name', String(sequence)+'.mp4');  // 원하는 파일 이름으로 설정
+            formData.append('video', people);
 
             const response = await fetch('http://13.209.86.34:5001/api/video/upload', {
                 method: 'POST',
@@ -98,6 +99,32 @@ const LivePage = () => {
         setIsLiveOn(!isLiveOn);
     };
 
+    const fileInputRef = useRef(null);
+
+    // const handleFileChange = () => {
+    //     const file = fileInputRef?.current?.files[0];
+    //
+    //     if (file) {
+    //         const formData = new FormData();
+    //         formData.append("video", file);
+    //         formData.append('file_name', 'people_test.mp4');
+    //
+    //         // 여기서 formData를 서버로 전송하거나, axios 등을 사용하여 업로드합니다.
+    //         // 아래는 fetch를 사용한 예제입니다.
+    //         fetch("http://13.209.86.34:5001/api/video/upload", {
+    //             method: "POST",
+    //             body: formData,
+    //         })
+    //             .then((response) => response.json())
+    //             .then((data) => {
+    //                 console.log("Upload success:", data);
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Upload error:", error);
+    //             });
+    //     }
+    // }
+
     return (
         <>
             <video className="video" width="100%" autoPlay ref={liveRef} />
@@ -106,6 +133,7 @@ const LivePage = () => {
                 <div className="fixed p-6 right-0">
                     <button className="p-[2px] bg-white rounded-3xl" onClick={onClick}> {isLiveOn ?  <FaCircleStop color="#E21401" size="48"/> : <FaRecordVinyl color="#E21401" size="48"/>} </button>
                 </div>
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} />
             </div>
         </>
     );

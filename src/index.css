@@ -2,15 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html, body, #root {
   height: 100%;
   width: 100%;
+  color: white;
 }
 
 .video{
   object-fit: cover;
-  width: 100%;
-  height: 300px;
+  height: 100%;
   background-color: #535bf2;
 }
 
@@ -27,12 +27,10 @@ html, body {
 }
 
 .splash {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: red;
-  z-index: 9999;
   animation: fadeOut 3s ease;
+}
+
+.small-button{
+  padding: 0.5rem 1rem;
+  background-color: #000000;
 }

@@ -19,7 +19,7 @@ function App() {
 
     return (
         <>
-            {showModal && (<Splash/>)}
+            {showModal && <Splash />}
             <LivePage/>
         </>
     )

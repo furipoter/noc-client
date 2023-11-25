@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import Header from "../components/Header.tsx";
 
 const CONSTRAINTS = {
     video: true,
@@ -8,7 +9,31 @@ const CONSTRAINTS = {
 const LivePage = () => {
     const liveRef = useRef<HTMLVideoElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const chunks: Blob[] = [];
+    // const chunks: Blob[] = [];
+
+    let sequence = 0
+
+    const uploadVideo = async (blob: Blob) => {
+        try {
+            const formData = new FormData();
+            formData.append('file_name', String(sequence));  // 원하는 파일 이름으로 설정
+            formData.append('video', blob);
+
+            const response = await fetch('http://13.209.86.34:5001/api/video/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('서버 응답:', responseData);
+            } else {
+                console.error('서버 응답 오류:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('API 요청 중 에러:', error);
+        }
+    };
 
     const startLive = async () => {
         try {
@@ -25,9 +50,9 @@ const LivePage = () => {
                 // 녹화가 준비되었을 때 이벤트 처리
                 mediaRecorderRef.current.ondataavailable = (e) => {
                     if (e.data.size > 0) {
-                        chunks.push(e.data);
+                        uploadVideo(e.data);
+                        console.log('onDataAvailable', e.data);
                     }
-                    console.log('onDataAvailable', e.data);
                 };
 
                 // 녹화 중지 시 이벤트 처리
@@ -55,10 +80,13 @@ const LivePage = () => {
 
     return (
         <>
-            <div className="text-red font-bold text-3xl">LivePage</div>
-            <video className="video" autoPlay ref={liveRef} />
-            <br />
-            <button onClick={startLive}>Start</button>
+            <video className="video" width="100%" autoPlay ref={liveRef} />
+            <div className="fixed top-0 left-0 p-6">
+                <Header />
+                <div>
+                    <button className="small-button" onClick={startLive}>Start</button>
+                </div>
+            </div>
         </>
     );
 };

@@ -26,7 +26,7 @@ function App() {
                 {showModal && <Splash />}
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
-                    <Route path="/live" element={<LivePage/>}/>
+                    <Route path="/upload" element={<LivePage/>}/>
                     <Route path="/view" element={<ViewPage/>}/>
                 </Routes>
             </BrowserRouter>

@@ -72,3 +72,8 @@ html, body, #root {
 @keyframes rotate {
   100% { transform: rotate(360deg) }
 }
+
+
+textarea:focus, input:focus {
+    color: #000000;
+}

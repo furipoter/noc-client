@@ -1,39 +1,46 @@
-import React, { useRef, useEffect } from 'react';
-import Header from "../components/Header.tsx";
+import React, { useEffect, useRef } from 'react';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 import {useParams} from "react-router-dom";
+import Chat from "../components/Chat.tsx"; // video.js 스타일 파일
 
 const ViewPage: React.FC = () => {
-
     const videoRef = useRef<HTMLVideoElement | null>(null);
-    const {video} = useParams();
+    const { video } = useParams();
 
     useEffect(() => {
-        // 비디오 주소
-        const videoUrl = "https://furiosa-video.s3.ap-northeast-2.amazonaws.com/upload/2";
-
-        // 비디오 요소 참조
-        const videoElement = videoRef.current;
-
-        if (videoElement) {
-            // 비디오 주소를 설정하고 비디오 로드
-            videoElement.src = videoUrl;
-
-            videoElement.addEventListener('loadedmetadata', () => {
-                videoElement.play().catch(error => console.error('비디오 재생 중 오류:', error));
-            });
+        if (!videoRef.current) {
+            return;
         }
-    }, []);
+        const videoOptions = {
+            controls: true,
+            fluid: true,
+            sources: [{
+                src: `https://furiosa-video.s3.ap-northeast-2.amazonaws.com/convert/${video}`,
+                type: 'video/mp4',
+            }],
+        };
+
+        const player = videojs(videoRef.current, videoOptions, function onPlayerReady() {
+            console.log('Player is ready');
+        });
+
+        // 컴포넌트가 언마운트될 때 플레이어 해제
+        return () => {
+            if (player) {
+                player.dispose();
+            }
+        };
+    }, [video]);
 
     return (
         <>
-            <video ref={videoRef} className="video" width="100%">
-                Your browser does not support the video tag.
-            </video>
-            <div className="fixed top-0 left-0 w-full">
-                <Header title={video} />
+            <div data-vjs-player>
+                <video ref={videoRef} className="video-js vjs-big-play-centered" />
             </div>
+            <Chat video={video} />
         </>
     );
 };
 
-export default ViewPage
+export default ViewPage;

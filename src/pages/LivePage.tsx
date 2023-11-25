@@ -1,5 +1,6 @@
-import { useRef, useEffect } from "react";
+import {useRef, useEffect, useState} from "react";
 import Header from "../components/Header.tsx";
+import { FaRecordVinyl, FaCircleStop } from "react-icons/fa6";
 
 const CONSTRAINTS = {
     video: true,
@@ -7,6 +8,7 @@ const CONSTRAINTS = {
 };
 
 const LivePage = () => {
+    const [isStarted, setIsStarted] = useState(false);
     const liveRef = useRef<HTMLVideoElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     // const chunks: Blob[] = [];
@@ -14,15 +16,18 @@ const LivePage = () => {
     let sequence = 0
 
     const uploadVideo = async (blob: Blob) => {
+        const mp4 = new Blob([blob], { type: 'video/mp4' });
         try {
             const formData = new FormData();
             formData.append('file_name', String(sequence));  // 원하는 파일 이름으로 설정
-            formData.append('video', blob);
+            formData.append('video', mp4);
 
             const response = await fetch('http://13.209.86.34:5001/api/video/upload', {
                 method: 'POST',
                 body: formData,
             });
+
+            sequence += 1
 
             if (response.ok) {
                 const responseData = await response.json();
@@ -45,7 +50,7 @@ const LivePage = () => {
                 // MediaRecorder 생성
                 mediaRecorderRef.current = new MediaRecorder(stream);
 
-                console.log('MediaRecorder 생성', stream)
+                // console.log('MediaRecorder 생성', stream)
 
                 // 녹화가 준비되었을 때 이벤트 처리
                 mediaRecorderRef.current.ondataavailable = (e) => {
@@ -78,13 +83,22 @@ const LivePage = () => {
         };
     }, []);
 
+    const onClick = () => {
+        if(isStarted) {
+            setIsStarted(false)
+            return
+        }
+        setIsStarted(true)
+        startLive()
+    }
+
     return (
         <>
             <video className="video" width="100%" autoPlay ref={liveRef} />
-            <div className="fixed top-0 left-0 p-6">
+            <div className="fixed top-0 left-0 w-full">
                 <Header />
-                <div>
-                    <button className="small-button" onClick={startLive}>Start</button>
+                <div className="fixed p-6 right-0">
+                    <button className="p-[2px] bg-white rounded-3xl" onClick={onClick}> {isStarted ?  <FaCircleStop color="#E21401" size="48"/> : <FaRecordVinyl color="#E21401" size="48"/>} </button>
                 </div>
             </div>
         </>

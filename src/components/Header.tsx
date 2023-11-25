@@ -1,11 +1,16 @@
 import { MdOutlineExitToApp } from "react-icons/md";
+import {useNavigate} from "react-router-dom";
 
 const Header = () => {
+    const navigate = useNavigate()
+    const onClick = () => {
+        navigate(-1)
+    }
     return (
-        <div>
-            <div className="text-red font-bold text-3xl">방송 주제 텍스트</div>
-            <button className="small-buttonn bg-red">
-                <MdOutlineExitToApp />
+        <div className="flex w-full justify-between p-6 gradient">
+            <div className="text-red font-bold text-3xl break-keep">[LIVE] FURIOSA AI 해커톤 현장</div>
+            <button onClick={onClick}>
+                <MdOutlineExitToApp size="36" />
             </button>
         </div>
     )

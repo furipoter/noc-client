@@ -16,7 +16,7 @@ const LivePage = () => {
         <div className="text-red font-bold text-3xl">
             LivePage
         </div>
-        <video autoPlay ref={liveRef}/>
+        <video className="video" autoPlay ref={liveRef}/>
         <br/>
         <button onClick={startLive}>start</button>
     </>

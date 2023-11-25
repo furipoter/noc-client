@@ -1,6 +1,7 @@
-import {useRef, useEffect} from "react";
+import {useRef, useEffect, useState} from "react";
 import Header from "../components/Header.tsx";
 import { IoMdCloudUpload } from "react-icons/io";
+import {useNavigate} from "react-router-dom";
 
 const CONSTRAINTS = {
     video: true,
@@ -12,6 +13,8 @@ const LivePage = () => {
     // const [isLiveOn, setIsLiveOn] = useState(false);
     const liveRef = useRef<HTMLVideoElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate()
     // const chunks: Blob[] = [];
 
     // let sequence = 0
@@ -103,10 +106,14 @@ const LivePage = () => {
     const handleFileChange = () => {
         const file = fileInputRef?.current?.files?.[0];
 
+        console.log(file)
+
         if (file) {
+            setIsLoading(true)
+
             const formData = new FormData();
             formData.append("video", file);
-            formData.append('file_name', 'people_test.mp4');
+            formData.append('file_name', file?.name);
 
             // 여기서 formData를 서버로 전송하거나, axios 등을 사용하여 업로드합니다.
             // 아래는 fetch를 사용한 예제입니다.
@@ -120,7 +127,11 @@ const LivePage = () => {
                 })
                 .catch((error) => {
                     console.error("Upload error:", error);
-                });
+                })
+                .finally(()=>{
+                    setIsLoading(false);
+                    navigate(`/view/${file?.name}`)
+                })
         }
     }
 
@@ -133,9 +144,19 @@ const LivePage = () => {
                 {/*    <button className="p-[2px] bg-white rounded-3xl" onClick={onClick}> {isLiveOn ?  <FaCircleStop color="#E21401" size="48"/> : <FaRecordVinyl color="#E21401" size="48"/>} </button>*/}
                 {/*</div>*/}
                 <div className="h-full flex flex-col justify-center items-center backdrop-blur">
-                    <label htmlFor="file" className="font-bold">블러처리 할 파일을 등록해주세요.</label>
-                    <label htmlFor="file" ><IoMdCloudUpload color="#FFFFFF" size="72" /></label>
-                    <input id="file" type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange}/>
+                    {isLoading ?
+                        <>
+                            <span className="font-bold">블러를 입히는 중 입니다. 잠시만 기다려주세요.</span>
+                            <br/>
+                            <span className="loader"></span>
+                        </>
+                        :
+                        <>
+                            <label htmlFor="file" className="font-bold">블러처리 할 파일을 등록해주세요.</label>
+                            <label htmlFor="file" ><IoMdCloudUpload color="#FFFFFF" size="72" /></label>
+                            <input id="file" type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange}/>
+                        </>
+                    }
                 </div>
             </div>
         </>

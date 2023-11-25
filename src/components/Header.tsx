@@ -1,7 +1,7 @@
 import { MdOutlineExitToApp } from "react-icons/md";
 import {useNavigate} from "react-router-dom";
 
-const Header = ({title}:{title:string}) => {
+const Header = ({title}:{title?:string}) => {
     const navigate = useNavigate()
     const onClick = () => {
         navigate(-1)

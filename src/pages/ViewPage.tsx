@@ -1,9 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import Header from "../components/Header.tsx";
+import {useParams} from "react-router-dom";
 
 const ViewPage: React.FC = () => {
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    const {video} = useParams();
 
     useEffect(() => {
         // 비디오 주소
@@ -28,7 +30,7 @@ const ViewPage: React.FC = () => {
                 Your browser does not support the video tag.
             </video>
             <div className="fixed top-0 left-0 w-full">
-                <Header />
+                <Header title={video} />
             </div>
         </>
     );

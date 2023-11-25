@@ -1,21 +1,37 @@
 import { useNavigate} from "react-router-dom";
 import Band from "../components/Band.tsx";
 import Footer from "../components/Footer.tsx";
-
-const hot10 = [
-    {title: '[LIVE] FURIOSA AI 해커톤 현장'},
-    {title: '[단독] 퓨리포터 등장'},
-    {title: '[긴급] 세상에 지금이 몇시지'},
-    {title: '여긴 어디 나는 누구'}
-]
-
+import {useEffect, useState} from "react";
+import {BandItemType} from "../components/BandItem.tsx";
 
 const HomePage = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [videoList, setVideoList] = useState<{ count:number, list: BandItemType[] } | undefined>(undefined);
+    const url = 'http://13.209.86.34:5002/api/video_list';
+
+    useEffect(() => {
+        // Fetch data when the component mounts
+        const fetchData = async () => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setVideoList(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                // Handle error as needed (e.g., show an error message to the user)
+            }
+        };
+
+        fetchData();
+    }, [url]); // Dependency array to ensure the effect runs only once on mount
 
     const onClick = () => {
-        navigate('/upload')
-    }
+        navigate('/upload');
+    };
+
     return(
         <>
             <div className="flex flex-col justify-between h-full w-full bg-black">
@@ -23,7 +39,7 @@ const HomePage = () => {
                     <div className="mb-[1rem] p-6">
                         <span className="text-[#E21401] text-3xl font-bold ">AI Blur</span>
                     </div>
-                    <Band title='HOT 10' band={hot10}/>
+                    <Band title='HOT 10' videoList={videoList}/>
                 </div>
                 <div className="flex items-center flex-col w-full">
                     <div className="flex w-full px-6 my-2">

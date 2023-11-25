@@ -27,7 +27,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/upload" element={<LivePage/>}/>
-                    <Route path="/view" element={<ViewPage/>}/>
+                    <Route path="/view/:video" element={<ViewPage/>}/>
                 </Routes>
             </BrowserRouter>
         </>

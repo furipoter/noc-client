@@ -8,7 +8,8 @@ const CONSTRAINTS = {
 };
 
 const LivePage = () => {
-    const [isStarted, setIsStarted] = useState(false);
+    const isLiveOnRef = useRef(false);
+    const [isLiveOn, setIsLiveOn] = useState(false);
     const liveRef = useRef<HTMLVideoElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     // const chunks: Blob[] = [];
@@ -16,6 +17,10 @@ const LivePage = () => {
     let sequence = 0
 
     const uploadVideo = async (blob: Blob) => {
+        if (!isLiveOnRef.current) {
+            return;
+        }
+        console.log('uploadVideo', blob);
         const mp4 = new Blob([blob], { type: 'video/mp4' });
         try {
             const formData = new FormData();
@@ -54,9 +59,9 @@ const LivePage = () => {
 
                 // 녹화가 준비되었을 때 이벤트 처리
                 mediaRecorderRef.current.ondataavailable = (e) => {
-                    if (e.data.size > 0) {
+                    if (e.data.size > 0){
                         uploadVideo(e.data);
-                        console.log('onDataAvailable', e.data);
+                        // console.log('onDataAvailable', e.data);
                     }
                 };
 
@@ -74,8 +79,13 @@ const LivePage = () => {
         }
     };
 
+    useEffect(() => {
+        isLiveOnRef.current = isLiveOn;
+    }, [isLiveOn]);
+
     // 컴포넌트가 언마운트될 때 녹화 중지
     useEffect(() => {
+        startLive()
         return () => {
             if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
                 mediaRecorderRef.current.stop();
@@ -84,13 +94,9 @@ const LivePage = () => {
     }, []);
 
     const onClick = () => {
-        if(isStarted) {
-            setIsStarted(false)
-            return
-        }
-        setIsStarted(true)
-        startLive()
-    }
+        // isLiveOn 값을 토글
+        setIsLiveOn(!isLiveOn);
+    };
 
     return (
         <>
@@ -98,7 +104,7 @@ const LivePage = () => {
             <div className="fixed top-0 left-0 w-full">
                 <Header />
                 <div className="fixed p-6 right-0">
-                    <button className="p-[2px] bg-white rounded-3xl" onClick={onClick}> {isStarted ?  <FaCircleStop color="#E21401" size="48"/> : <FaRecordVinyl color="#E21401" size="48"/>} </button>
+                    <button className="p-[2px] bg-white rounded-3xl" onClick={onClick}> {isLiveOn ?  <FaCircleStop color="#E21401" size="48"/> : <FaRecordVinyl color="#E21401" size="48"/>} </button>
                 </div>
             </div>
         </>

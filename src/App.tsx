@@ -1,4 +1,4 @@
-import './App.css'
+import './index.css'
 import LivePage from "./pages/LivePage.tsx";
 
 function App() {

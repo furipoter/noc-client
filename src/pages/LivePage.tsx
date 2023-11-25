@@ -13,7 +13,11 @@ const LivePage = () => {
     }
 
     return <>
-        <video autoPlay  ref={liveRef}/>
+        <div className="text-red font-bold text-3xl">
+            LivePage
+        </div>
+        <video autoPlay ref={liveRef}/>
+        <br/>
         <button onClick={startLive}>start</button>
     </>
 }

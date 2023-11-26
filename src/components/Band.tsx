@@ -6,7 +6,6 @@ interface Props {
 }
 
 const Band = ({title, videoList}: Props) => {
-    console.log(videoList)
     return(
         <div className="p-6">
             <span className="text-2xl font-bold mb-2">{title}</span>

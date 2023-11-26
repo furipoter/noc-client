@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 const Chat = ({video}: { video?: string }) => {
     const [message, setMessage] = useState('');
-    const url = 'http://13.209.86.34:5002/api/chat/create';
+    const url = 'http://43.202.196.35:5002/api/chat/create';
     const [chatList, setChatList] = useState<{ chats: { content:string, created_at:string, video_name: string }[] } | undefined>(undefined);
 
     const fetchChatList = async () => {

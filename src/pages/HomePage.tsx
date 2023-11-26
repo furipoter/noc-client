@@ -3,21 +3,28 @@ import Band from "../components/Band.tsx";
 import Footer from "../components/Footer.tsx";
 import {useEffect, useState} from "react";
 import {BandItemType} from "../components/BandItem.tsx";
+import axios from "axios";
 
 const HomePage = () => {
     const navigate = useNavigate();
     const [videoList, setVideoList] = useState<{ count:number, list: BandItemType[] } | undefined>(undefined);
-    const url = 'http://13.209.86.34:5002/api/video_list';
+    const url = 'http://43.202.196.35:5002/api/video_list';
+
+    const httpInstance = axios.create({
+        baseURL: 'http://43.202.196.35:5002'
+    })
 
     useEffect(() => {
         // Fetch data when the component mounts
         const fetchData = async () => {
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
+                const response = await httpInstance.get('/api/video_list');
+
+                if (response.status !== 200) {
                     throw new Error('Network response was not ok');
                 }
-                const data = await response.json();
+
+                const data = response.data;
                 setVideoList(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -26,8 +33,7 @@ const HomePage = () => {
         };
 
         fetchData();
-    }, [url]); // Dependency array to ensure the effect runs only once on mount
-
+    }, [url]);
     const onClick = () => {
         navigate('/upload');
     };

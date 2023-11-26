@@ -51,9 +51,9 @@ const HomePage = () => {
                     <div className="flex w-full px-6 my-2">
                         <button onClick={onClick} className="bg-[#E21401] py-2 px-4 w-full text-center rounded-l" >영상 업로드하기</button>
                     </div>
-                    <Footer />
                 </div>
             </div>
+            <Footer />
         </>
     )
 }
